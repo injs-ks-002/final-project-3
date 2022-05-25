@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
     "db:create:migrate": "sequelize migration:generate --name",
-    "db:migrate": "sequelize db:migrate",
-    "db:rollback": "sequelize db:migrate:undo"
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:rollback": "sequelize db:migrate:undo",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,10 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
     "sequelize": "^6.19.2",
+    "joi": "^17.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16",
     "sequelize-cli": "^6.4.1"
   }
 }

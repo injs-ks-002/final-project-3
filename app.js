@@ -12,6 +12,6 @@ app.use("/users", userRouter);
 app.use("/product", productRouter);
 
 
-app.listen(3000, function () {
-    console.log('Contoh server berjalan di port 3000!')
+app.listen(port, function () {
+    console.log(`Server running on http://localhost:${port}`)
 })
