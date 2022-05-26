@@ -1,23 +1,17 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Products', {
+    await queryInterface.createTable('Category', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
+      type: {
         type: Sequelize.STRING
       },
-      price: {
-        type: Sequelize.INTEGER
-      },
-      stock: {
-        type: Sequelize.INTEGER
-      },
-      CategoryId: {
+      sold_product_amount: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -29,21 +23,20 @@ module.exports = {
         type: Sequelize.DATE
       }
     }).then(() => {
-      queryInterface.addConstraint("Products", {
-        fields: ["CategoryId"],
+      queryInterface.addConstraint("Category", {
+        fields: ["id"],
         type: "foreign key",
-        name: "category_fk",
+        name: "user_fk",
         references: {
-          table: "Category",
+          table: "Users",
           field: "id",
         },
         onDelete: "cascade",
         onUpdate: "cascade",
       })
-    }
-  );
+    });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Products');
+    await queryInterface.dropTable('Category');
   }
 };
