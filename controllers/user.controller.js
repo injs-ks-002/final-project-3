@@ -2,20 +2,6 @@ const User = require("../models/index").User;
 const bcrypt = require('bcrypt')
 const { generateToken } = require ('../middleware/auth.js');
 
-exports.getUser = async (req, res) => {
-    return User.findAll().then(users=> {
-        res.status(200).send({
-            status : "SUCCES",
-            data: users
-        })
-    }).catch(e => {
-        console.log(e)
-        res.status(500).send({
-            status : "FAIL",
-            message : 'INTERNAL SERVER ERROR'
-        })
-    })
-}
 
 exports.postUser = async (req, res) => {
     const body = req.body;
@@ -51,10 +37,13 @@ exports.signUp = async(req, res) => {
     const full_name = body.full_name;
     const email = body.email;
     const gender = body.gender;
-    const role = body.role;
     const password = body.password;
-    const balance = body.balance;
 
+    User.beforeCreate(user => {
+        user.balance = 0
+        user.role = "customer"
+        
+    })
     return User.findOne({
         where: {
             email: email,
@@ -73,13 +62,22 @@ exports.signUp = async(req, res) => {
                 email: email,
                 password: hash,
                 gender: gender,
-                role : role,
-                balance : balance,
             })
-            .then((user) => {
-                res.status(200).json({
-                    user : user,
-                });
+            .then(() => {
+                User.findOne({
+                    where : { email: email}
+                }).then(user =>{
+                    user = {
+                        id : user.id,
+                        full_name : user.full_name,
+                        email : user.email,
+                        balance: user.balance,
+                        createdAt : user.createdAt,
+                        
+                    }
+                    res.status(201).json(user)
+                })
+                    
             })
             .catch((e) => {
                 console.log(e);
@@ -117,6 +115,7 @@ exports.signIn = async(req, res) => {
                 id: user.id,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                role : user.role,
             });
             res.status(200).send({
                 status: "SUKSES",
@@ -132,9 +131,57 @@ exports.signIn = async(req, res) => {
 });
 }
 
+exports.patchUser = async (req, res) => {
+    const id = req.id
+    const body = req.body
+
+        await User.findOne({
+        where: {
+            id: req.id
+        }
+    }).then( checkUser => {
+        if (!checkUser) {
+            res.status(404).send({
+                status: 404,
+                message: `User by id '${id}' is not found`
+            })
+        } else {
+            User.update({
+                balance: body.balance
+            }, {
+                where: {
+                    id: id
+                }
+            }).then( user => {
+                if (!user) {
+                    res.status(400).send({
+                        status: 400,
+                        message: 'Failed for update Product'
+                    })
+                } else {
+                    User.findOne({
+                        where : {
+                            id : id
+                        }
+                    }).then(user => {
+                        res.status(200).json({
+                            message: "Your balance has been successfully update to Rp",
+                        })
+                    })      
+                }
+            }).catch( err => {
+                console.log(err)
+                res.status(503).send({
+                    status: 503,
+                    message: 'Internal server error'
+                })
+            })
+        }
+    })
+}
 
 exports.updateUser = async (req, res) => {
-    const id = req.params.userId;
+    const id = req.id
     const full_name = req.body.full_name;
     const email = req.body.email;
     const dataUser = {
@@ -142,13 +189,23 @@ exports.updateUser = async (req, res) => {
         email,
       };
       await User.update(dataUser,
-          { where: { id: req.params.id },
+          { where: { id: id },
           returning : true,
         })
         .then((user) => {
-            res.status(200).json({
-                user: user
+            User.findOne({
+                where : { id: id}
+            }).then(user =>{
+                user = {
+                    id : user.id,
+                    full_name : user.full_name,
+                    email : user.email,
+                    createdAt : user.createdAt,
+                    updatedAt : user.updatedAt,
+                }
+                res.status(200).json(user)
             })
+                
         })
         .catch((error) => {
             console.log(error);

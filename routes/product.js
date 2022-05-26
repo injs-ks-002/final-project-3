@@ -2,10 +2,13 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/product.controller')
 const verify = require('../middleware/auth').verify
+const product = require('../middleware/product.validation')
 router.use(express.json())
 
-router.get('/', verify,controller.getProduct)
-router.post('/', verify,controller.postProduct)
+
+router.get('/',verify, controller.getProduct)
+router.post('/',verify,product.validation,controller.postProduct)
+router.patch('/:productId',verify,product.validation, controller.patchProduct);
 router.put('/:productId', verify,controller.updateProduct)
 router.delete('/:productId', verify,controller.deleteProduct)
 

@@ -10,6 +10,7 @@ const verify = async (req, res, next) => {
             })
         }
         req.id = decoded.id
+        req.role = decoded.role
         next();
     });
 }
@@ -17,7 +18,7 @@ const verify = async (req, res, next) => {
 const generateToken = (payload) => {
     return jwt.sign(payload, privateKey, {
          algorithm: 'HS256',
-         expiresIn: "1h"
+         expiresIn: "1d"
     });
 }
 module.exports = {

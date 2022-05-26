@@ -4,7 +4,7 @@ module.exports = {
     await queryInterface.createTable('Category', {
       id: {
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
@@ -22,19 +22,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => {
-      queryInterface.addConstraint("Category", {
-        fields: ["id"],
-        type: "foreign key",
-        name: "user_fk",
-        references: {
-          table: "Users",
-          field: "id",
-        },
-        onDelete: "cascade",
-        onUpdate: "cascade",
-      })
-    });
+    })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Category');
