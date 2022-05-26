@@ -1,7 +1,5 @@
 const Product = require("../models/index").Product;
-const User = require("../models/index").User;
-const jwt = require('jsonwebtoken');
-const product = require('../models/product');
+
 
 exports.getProduct = async (req, res) => {
     return Product.findAll().then(products=> {

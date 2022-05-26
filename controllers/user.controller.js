@@ -2,36 +2,6 @@ const User = require("../models/index").User;
 const bcrypt = require('bcrypt')
 const { generateToken } = require ('../middleware/auth.js');
 
-
-exports.postUser = async (req, res) => {
-    const body = req.body;
-    const full_name = body.full_name;
-    const email = body.email;
-    const gender = body.gender;
-    const role = body.role;
-    const balance = body.balance;
-
-    return User.create({
-        full_name: full_name,
-        email: email,
-        gender: gender,
-        role : role,
-        balance : balance    
-    })
-    .then(user => {
-        res.status(200).send({
-           status : "SUCCESS",
-           message : "User berhasil dibuat",
-           data : user
-        })
-    }).catch(e => {
-        console.log(e)
-        res.status(500).send({
-            status : "FAIL",
-            message : "Gagal membuat user"
-        })
-    })
-}
 exports.signUp = async(req, res) => {
     const body = req.body;
     const full_name = body.full_name;
