@@ -8,7 +8,10 @@ exports.signUp = async(req, res) => {
     const email = body.email;
     const gender = body.gender;
     const password = body.password;
-
+    let rupiah = new Intl.NumberFormat('id', {
+        style: 'currency',
+        currency: 'IDR'
+    })
     User.beforeCreate(user => {
         user.balance = 0
         user.role = "customer"
@@ -41,7 +44,7 @@ exports.signUp = async(req, res) => {
                         id : user.id,
                         full_name : user.full_name,
                         email : user.email,
-                        balance: user.balance,
+                        balance: rupiah.format(user.balance),
                         createdAt : user.createdAt,
                         
                     }
@@ -51,8 +54,8 @@ exports.signUp = async(req, res) => {
             })
             .catch((e) => {
                 console.log(e);
-                res.status(400).send({
-                    message : "Gagal membuat user"
+                res.status(500).send({
+                    message : "INTERNAL SERVER ERORR"
                 });
             });
 });
@@ -94,7 +97,7 @@ exports.signIn = async(req, res) => {
         })
         .catch((e) => {
             console.log(e);
-            res.status(400).send({
+            res.status(500).send({
                 status : "FAIL",
                 message : "Gagal login"
         });
@@ -180,7 +183,7 @@ exports.updateUser = async (req, res) => {
         .catch((error) => {
             console.log(error);
             res.status(500).json({
-                message: "INTERNAL SERVER",
+                message: "INTERNAL SERVER EROR",
                 error: error,
             });
         })

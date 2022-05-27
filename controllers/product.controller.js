@@ -1,4 +1,5 @@
 const Product = require("../models/index").Product;
+const Category = require("../models/index").Category
 
 
 exports.getProduct = async (req, res) => {
@@ -24,6 +25,20 @@ exports.postProduct = async (req, res) => {
     const stock = body.stock;
     const userRole = req.role
     if(userRole == "admin"){
+     let rupiah = new Intl.NumberFormat('id', {
+            style: 'currency',
+            currency: 'IDR'
+        })
+        let result = rupiah.format(price)
+        const category = await Category.findOne({
+            where : {id: CategoryId}
+        })
+        if(!category){
+            return res.status(404).send({
+                status:404,
+                message: `Category by id '${CategoryId}' is not found`
+            })
+        }
         await Product.create({
             title: title,
             price: price,
@@ -34,9 +49,11 @@ exports.postProduct = async (req, res) => {
             res.status(201).json({
                id: product.id,
                title: product.title,
-               price: product.price,
+               price: result,
                stock: product.stock,
-               data : product
+               CategoryId : product.CategoryId,
+               createdAt : product.createdAt,
+               updatedAt : product.updatedAt
             })
         }).catch(e => {
             console.log(e)
@@ -148,7 +165,7 @@ exports.deleteProduct = (req, res) => {
     const userRole = req.role
     if(userRole == "admin"){
         Product.destroy({
-            where: {  id: productId, Ca },
+            where: {  id: productId },
           })
           .then (() => {
               res.status(200).json({
