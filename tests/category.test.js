@@ -139,7 +139,7 @@ describe('CategoryController.deleteCategory', () => {
         }
         try {
             Category.findOne.mockResolvedValue(errData)
-            await controller.patchCategory(req, res)
+            await controller.deleteCategory(req, res)
         } catch {
             expect(res.statusCode).toBe(503)
         }
