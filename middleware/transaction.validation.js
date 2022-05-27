@@ -2,9 +2,15 @@ const Joi = require('joi')
 
 exports.validation = (req, res, next) => {
     const schema = Joi.object({
-        type: Joi.string()
+        productId: Joi.number()
+            .integer()
             .required()
-            .label("type must be string and not empty")
+            .label("productId must be integer number and not empty"),
+
+        quantity: Joi.number()
+            .integer()
+            .required()
+            .label("quantity must be integer number and not empty")
     })
     
     const {error} = schema.validate(req.body)

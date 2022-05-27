@@ -1,5 +1,5 @@
-const {Category} = require('../models/index')
-const controller = require('../controllers/category.controller')
+const {TransactionHistory, Product, User, Category} = require('../models/index')
+const controller = require('../controllers/transaction.controller')
 const httpMocks = require('node-mocks-http')
 
 jest.mock('../models/index')
@@ -11,16 +11,27 @@ beforeEach(() => {
     req.headers["auth"]
     res = httpMocks.createResponse()
 })
-describe('CategoryController.postCategory', () => {
+describe('TransactionController.postTransaction', () => {
     it('should return 201', async () => {
-        const userRole = req.role
-        if (userRole == 'admin') {
-            Category.create.mockResolvedValue({
-                type: 'Food'
-            })
-            await controller.postCategory(req, res)
-            expect(res.statusCode).toBe(201)
-        }
+        const id = req.id
+        Product.findOne.mockResolvedValue({
+            where: {
+                id: 1
+            }
+        })
+        User.findOne.mockResolvedValue({
+            where: {
+                id: id
+            }
+        })
+        TransactionHistory.create.mockResolvedValue({
+            UserId: 1,
+            ProductId: 1,
+            quantity: 1,
+            total_price: 1
+        })
+        await controller.postTransaction(req, res)
+        expect(res.statusCode).toBe(503)
     })
     it('should return error', async () => {
         const errData = {
@@ -28,8 +39,8 @@ describe('CategoryController.postCategory', () => {
             message: "Internal server error"
         }
         try {
-            Category.create.mockResolvedValue(errData)
-            await controller.postCategory(req, res)
+            TransactionHistory.create.mockResolvedValue(errData)
+            await controller.postTransaction(req, res)
         } catch {
             expect(res.statusCode).toBe(503)
         }
@@ -41,18 +52,16 @@ beforeEach(() => {
     req.headers["auth"]
     res = httpMocks.createResponse()
 })
-describe('CategoryController.getCategory', () => {
+describe('TransactionController.getTransactionForUser', () => {
     it('should return 200', async () => {
-        const userRole = req.role
-        if (userRole == 'admin') {
-            Category.findAll.mockResolvedValue({
-                where: {
-                    id: 1
-                }
-            })
-            await controller.getCategory(req, res)
-            expect(res.statusCode).toBe(200)
-        }
+        const id = req.id
+        TransactionHistory.findAll.mockResolvedValue({
+            where: {
+                UserId: id
+            }
+        })
+        await controller.getTransactionForUser(req, res)
+        expect(res.statusCode).toBe(200)
     })
     it('should return error', async () => {
         const errData = {
@@ -60,8 +69,8 @@ describe('CategoryController.getCategory', () => {
             message: "Internal server error"
         }
         try {
-            Category.findAll.mockResolvedValue(errData)
-            await controller.getCategory(req, res)
+            TransactionHistory.findAll.mockResolvedValue(errData)
+            await controller.getTransactionForUser(req, res)
         } catch {
             expect(res.statusCode).toBe(503)
         }
@@ -73,24 +82,13 @@ beforeEach(() => {
     req.headers["auth"]
     res = httpMocks.createResponse()
 })
-describe('CategoryController.patchCategory', () => {
+describe('TransactionController.getTransactionForAdmin', () => {
     it('should return 200', async () => {
         const id = req.id
         const userRole = req.role
         if (userRole == 'admin') {
-            Category.findOne.mockResolvedValue({
-                where: {
-                    id: id
-                }
-            })
-            Category.update.mockResolvedValue({
-                type: 'Food'
-            }, {
-                where: {
-                    id: id
-                }
-            })
-            await controller.patchCategory(req, res)
+            TransactionHistory.findAll.mockResolvedValue()
+            await controller.getTransactionForAdmin(req, res)
             expect(res.statusCode).toBe(200)
         }
     })
@@ -100,8 +98,8 @@ describe('CategoryController.patchCategory', () => {
             message: "Internal server error"
         }
         try {
-            Category.findOne.mockResolvedValue(errData)
-            await controller.patchCategory(req, res)
+            TransactionHistory.findAll.mockResolvedValue(errData)
+            await controller.getTransactionForAdmin(req, res)
         } catch {
             expect(res.statusCode).toBe(503)
         }
@@ -113,22 +111,17 @@ beforeEach(() => {
     req.headers["auth"]
     res = httpMocks.createResponse()
 })
-describe('CategoryController.deleteCategory', () => {
+describe('TransactionController.getTransactionById', () => {
     it('should return 200', async () => {
         const id = req.id
         const userRole = req.role
         if (userRole == 'admin') {
-            Category.findOne.mockResolvedValue({
+            TransactionHistory.findAll.mockResolvedValue({
                 where: {
                     id: id
                 }
             })
-            Category.destroy.mockResolvedValue({
-                where: {
-                    id: id
-                }
-            })
-            await controller.deleteCategory(req, res)
+            await controller.getTransactionById(req, res)
             expect(res.statusCode).toBe(200)
         }
     })
@@ -138,8 +131,8 @@ describe('CategoryController.deleteCategory', () => {
             message: "Internal server error"
         }
         try {
-            Category.findOne.mockResolvedValue(errData)
-            await controller.patchCategory(req, res)
+            TransactionHistory.findAll.mockResolvedValue(errData)
+            await controller.getTransactionById(req, res)
         } catch {
             expect(res.statusCode).toBe(503)
         }
