@@ -109,7 +109,10 @@ exports.getTransactionForUser = async (req, res) => {
             ],
             include: {
                 model: Product,
-                as: 'Product'
+                as: 'Product',
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                }
             }
         })
         if (!transaction) {
@@ -143,12 +146,15 @@ exports.getTransactionForAdmin = async (req, res) => {
                 include: [
                     {
                         model: Product,
-                        as: 'Product'
+                        as: 'Product',
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt']
+                        }
                     },
                     {
                         model: User,
                         as: 'User',
-                        attributes: { exclude: ['password'] }
+                        attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
                     }
                 ]
             })
@@ -188,7 +194,10 @@ exports.getTransactionById = async (req, res) => {
                 },
                 include: {
                     model: Product,
-                    as: 'Product'
+                    as: 'Product',
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
                 }
             })
             if (!transaction) {
@@ -215,7 +224,10 @@ exports.getTransactionById = async (req, res) => {
                 },
                 include: {
                     model: Product,
-                    as: 'Product'
+                    as: 'Product',
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
                 }
             })
             if (!transaction) {

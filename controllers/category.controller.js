@@ -66,8 +66,7 @@ exports.getCategory = async (req, res) => {
 }
 
 exports.patchCategory = async (req, res) => {
-    var id = req.params.categoryId
-    id = req.id
+    const id = req.params.categoryId
     const body = req.body
     const userRole = req.role
     if (userRole == 'admin') {
@@ -128,8 +127,7 @@ exports.patchCategory = async (req, res) => {
 }
 
 exports.deleteCategory = async (req, res) => {
-    var id = req.params.categoryId
-    id = req.id
+    const id = req.params.categoryId
     const userRole = req.role
     if (userRole == 'admin') {
         await Category.findOne({
