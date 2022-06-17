@@ -2,6 +2,21 @@ const User = require("../models/index").User;
 const bcrypt = require('bcrypt')
 const { generateToken } = require ('../middleware/auth.js');
 
+exports.getUser = async (req, res) => {
+    return User.findAll().then(users=> {
+        res.status(200).send({
+            status : "SUCCES",
+            data: users
+        })
+    }).catch(e => {
+        console.log(e)
+        res.status(500).send({
+            status : "FAIL",
+            message : 'INTERNAL SERVER ERROR'
+        })
+    })
+}
+
 exports.signUp = async(req, res) => {
     const body = req.body;
     const full_name = body.full_name;

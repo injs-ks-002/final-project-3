@@ -81,3 +81,25 @@ exports.validationUpdate = (req, res, next) => {
         next()
     }
 }
+
+exports.validationTopup = (req, res, next) => {
+    const schema = Joi.object({
+        balance: Joi.number()
+                    .integer()
+                    .min(0)
+                    .max(100000000)
+                    .required()
+                    .label("type must be number and not empty"),
+
+    })
+    const {error} = schema.validate(req.body)
+
+    if (error) {
+        return res.status(422).send({
+            "status": 422,
+            "message": error.details.map(x => x.context.label).join(', ')
+        })
+    } else {
+        next()
+    }
+}
