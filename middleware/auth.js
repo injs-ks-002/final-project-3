@@ -6,7 +6,7 @@ const verify = async (req, res, next) => {
     jwt.verify(token, privateKey, (err, decoded)=> {
         if(err) {
             return res.status(401).send({
-                err: err
+                "error": err
             })
         }
         req.id = decoded.id

@@ -41,9 +41,16 @@ exports.postTransaction = async (req, res) => {
         })
         let result = rupiah.format(totalPrice)
 
+        let currentBalance = user.dataValues.balance - totalPrice
+        if (currentBalance < 0) {
+            return res.status(422).send({
+                status: 422,
+                message: 'Balance less than product price, please top up'
+            })
+        }
+
         TransactionHistory.beforeCreate(async () => {
             let currentStock = product.dataValues.stock - body.quantity
-            let currentBalance = user.dataValues.balance - totalPrice
             const getCategory = await Category.findOne({
                 where: {
                     id: product.dataValues.CategoryId

@@ -89,7 +89,7 @@ exports.validationTopup = (req, res, next) => {
                     .min(0)
                     .max(100000000)
                     .required()
-                    .label("type must be number and not empty"),
+                    .label("balance maximum Rp 100.000.000 and not empty"),
 
     })
     const {error} = schema.validate(req.body)

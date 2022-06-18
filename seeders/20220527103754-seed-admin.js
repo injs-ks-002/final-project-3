@@ -8,9 +8,9 @@ module.exports = {
       password: '$2a$10$Zx7XgwGRCriM6j58bM2YMuh0567JJJfP64be3U3p2avugQQXKB35.', // admin123
       gender: 'Male',
       role: 'admin',
-      balance: 10000000,
-      createdAt: '2022-05-27T18:10:30+07:00',
-      updatedAt: '2022-05-27T18:10:30+07:00'
+      balance: 100000000,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {})
     /**
      * Add seed commands here.

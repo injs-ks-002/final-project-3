@@ -5,7 +5,7 @@ router.use(express.json())
 const verify = require('../middleware/auth').verify
 const user = require('../middleware/user.validation')
 
-router.get('/', controller.getUser)
+router.get('/', verify, controller.getUser)
 router.post('/register',user.validationRegister, controller.signUp);
 router.post('/login',user.validationLogin, controller.signIn);
 router.patch('/topup',verify,user.validationTopup, controller.patchUser);

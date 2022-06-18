@@ -3,18 +3,30 @@ const bcrypt = require('bcrypt')
 const { generateToken } = require ('../middleware/auth.js');
 
 exports.getUser = async (req, res) => {
-    return User.findAll().then(users=> {
-        res.status(200).send({
-            status : "SUCCES",
-            data: users
+    const userRole = req.role
+    if(userRole == "admin") {
+        User.findAll({
+            order: [
+                ['updatedAt', 'DESC']
+            ],
+            attributes: { exclude: ['password'] }
+        }).then(users => {
+            return res.status(200).send({
+                status : "SUCCES",
+                data: users
+            })
+        }).catch(e => {
+            console.log(e)
+            return res.status(500).send({
+                status : "FAIL",
+                message : 'INTERNAL SERVER ERROR'
+            })
         })
-    }).catch(e => {
-        console.log(e)
-        res.status(500).send({
-            status : "FAIL",
-            message : 'INTERNAL SERVER ERROR'
+    } else {
+        res.status(401).send({
+            message : "Only admin can access"
         })
-    })
+    }
 }
 
 exports.signUp = async(req, res) => {
@@ -152,8 +164,13 @@ exports.patchUser = async (req, res) => {
                             id : id
                         }
                     }).then(user => {
+                        let rupiah = new Intl.NumberFormat('id', {
+                            style: 'currency',
+                            currency: 'IDR'
+                        })
+                        let result = rupiah.format(body.balance)
                         res.status(200).json({
-                            message: "Your balance has been successfully update to Rp",
+                            message: `Your balance has been successfully update to ${result}`,
                         })
                     })      
                 }
