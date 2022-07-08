@@ -4,7 +4,7 @@ exports.validation = (req, res, next) => {
     const schema = Joi.object({
         type: Joi.string()
             .required()
-            .label("type must be string and not empty")
+            .label("type harus berupa string dan tidak kosong")
     })
     
     const {error} = schema.validate(req.body)

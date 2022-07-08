@@ -5,22 +5,22 @@ exports.validationRegister = (req, res, next) => {
         email: Joi.string()
                   .email()
                   .required()
-                  .label("type must be string and not empty"),
+                  .label("email harus berupa string dan tidak kosong"),
         
         full_name: Joi.string()
                       .required()
-                      .label("type must be string and not empty"),
+                      .label("full_name harus berupa string dan tidak kosong"),
         
         password: Joi.string()
                      .required()
                      .min(6)
                      .max(10)
-                     .label("type must be string")
+                     .label("password harus berupa string dan tidak kosong")
                      .label("Minimum 1 character and not empty"),
 
         gender: Joi.required()
                    .valid('male', 'female')
-                   .label("type must be string and not empty"),
+                   .label("gender harus berupa string dan tidak kosong"),
 
     })
     const {error} = schema.validate(req.body)
@@ -40,12 +40,13 @@ exports.validationLogin = (req, res, next) => {
         email: Joi.string()
                   .email()
                   .required()
-                  .label("type must be string and not empty"),
+                  .label("email harus berupa string dan tidak kosong"),
         
         password: Joi.string()
                      .required()
                      .min(6)
-                     .max(10),
+                     .max(10)
+                     .label("Maaf, kata sandi Anda salah. Harap periksa kembali kata sandi Anda."),
     })
     const {error} = schema.validate(req.body)
 
@@ -64,7 +65,7 @@ exports.validationUpdate = (req, res, next) => {
         email: Joi.string()
                   .email()
                   .required()
-                  .label("type must be string and not empty"),
+                  .label("email harus berupa string dan tidak kosong"),
         
         full_name: Joi.string()
                       .required(),

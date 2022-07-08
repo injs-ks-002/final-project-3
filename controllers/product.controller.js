@@ -70,61 +70,6 @@ exports.postProduct = async (req, res) => {
     
 }
 
-exports.patchProduct = async (req, res) => {
-    const id = req.params.productId
-    const body = req.body
-    const userRole = req.role
-    if(userRole == "admin"){
-        await Product.findOne({
-        where: {
-            id: id
-        }
-    }).then( checkProduct => {
-        if (!checkProduct) {
-            res.status(404).send({
-                status: 404,
-                message: `Product by id '${id}' is not found`
-            })
-        } else {
-            Product.update({
-                CategoryId: body.CategoryId
-            }, {
-                where: {
-                    id: id
-                }
-            }).then( product => {
-                if (!product) {
-                    res.status(400).send({
-                        status: 400,
-                        message: 'Failed for update Product'
-                    })
-                } else {
-                    Product.findOne({
-                        where : {
-                            id : id
-                        }
-                    }).then(product => {
-                        res.status(200).send({
-                            "Product": product
-                        })
-                    })      
-                }
-            }).catch( err => {
-                console.log(err)
-                res.status(503).send({
-                    status: 503,
-                    message: 'Internal server error'
-                })
-            })
-        }
-    })
-    }else {
-        res.status(401).send({
-            message : "Only admin can access"
-        })
-    }
-}
-
 exports.updateProduct = async (req, res) => {
     const productId = req.params.productId;
     const title = req.body.title;

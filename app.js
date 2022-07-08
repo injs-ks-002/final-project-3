@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/users", userRouter);
 app.use("/product", productRouter);
-app.use('/categories', categoryRouter)
+app.use('/category', categoryRouter)
 app.use('/transactions', transactionRouter)
 
 

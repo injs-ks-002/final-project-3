@@ -4,26 +4,26 @@ exports.validation = (req, res, next) => {
     const schema = Joi.object({
         title: Joi.string()
                   .required()
-                  .label("title must be string and not empty"),
+                  .label("title harus berupa string dan tidak kosong"),
         
         stock: Joi.number()
                   .integer()
                   .required()
                   .min(5)
-                  .label("stock must be number")
-                  .label("Minimum 5 stock and not empty"),
+                  .label("stock harus berupa nomor / angka")
+                  .label("Stok minimal 5 dan tidak boleh kosong"),
         
         price: Joi.number()
                   .integer()
                   .required()
                   .min(0)
                   .max(50000000)
-                  .label("price must be number")
+                  .label("price harus berupa nomor / angka")
                   .label("Maximum Rp 50.000.000 and not empty"),
                          
         CategoryId: Joi.number()
                        .integer()
-                       .label("CategoryId must be number and not empty"),
+                       .label("CategoryId harus nomor / angka dan tidak kosong"),
     })
     
     const {error} = schema.validate(req.body)

@@ -5,12 +5,12 @@ exports.validation = (req, res, next) => {
         productId: Joi.number()
             .integer()
             .required()
-            .label("productId must be integer number and not empty"),
+            .label("productId harus bilangan bulat dan tidak kosong"),
 
         quantity: Joi.number()
             .integer()
             .required()
-            .label("quantity must be integer number and not empty")
+            .label("quantity harus bilangan bulat dan tidak kosong")
     })
     
     const {error} = schema.validate(req.body)
